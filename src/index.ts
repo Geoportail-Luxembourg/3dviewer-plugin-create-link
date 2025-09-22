@@ -68,6 +68,26 @@ export default function createLink(
           copied: 'Application link copied to clipboard.',
         },
       },
+      fr: {
+        createLink: {
+          title: 'Copier le lien',
+          windowTitle: 'Lien',
+          createLink: 'Générer le lien',
+          copyToClipboard: 'Copier le lien dans le presse-papiers',
+          refreshTooltip: 'Rafraîchir le lien',
+          copied: 'Le lien a bien été copié dans le presse-papiers.',
+        },
+      },
+      lb: {
+        createLink: {
+          title: 'Link kopéieren',
+          windowTitle: 'Applicatiouns-Link',
+          createLink: 'Link erstellen',
+          copyToClipboard: "Applicatiouns-Link an d'Zëschenaplag kopéieren",
+          refreshTooltip: 'Applicatiouns-Link aktualiséieren',
+          copied: "Applicatiouns-Link gouf an d'Zëschenaplag kopéiert.",
+        },
+      },
     },
     initialize(app: VcsUiApp): Promise<void> {
       const actionName = navigator.clipboard
