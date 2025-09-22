@@ -9,6 +9,11 @@ import {
 import FallbackCreateLink from './fallbackCreateLink.vue';
 import { name, version, mapVersion } from '../package.json';
 
+type PluginConfig = {
+  pathTo3dGeoportal: string;
+  pathToUrlShortenerApi: string;
+};
+
 const fallBackWindowId = 'create-link-fallback-window';
 function createFallbackWindow(app: VcsUiApp, link: string): void {
   app.windowManager.remove(fallBackWindowId);
@@ -29,7 +34,9 @@ function createFallbackWindow(app: VcsUiApp, link: string): void {
   );
 }
 
-export default function createLink(): VcsPlugin<never, never> {
+export default function createLink(
+  config: PluginConfig,
+): VcsPlugin<PluginConfig, never> {
   return {
     get name(): string {
       return name;
@@ -78,15 +85,46 @@ export default function createLink(): VcsPlugin<never, never> {
               const state = await app.getState(true);
               const url = new URL(window.location.href);
               setStateToUrl(state, url);
+
+              const data = new URLSearchParams();
+              const urlToShorten = url
+                .toString()
+                .replace(
+                  /https:\/\/geoportail-luxembourg.github.io\/.+\/.+\//,
+                  config.pathTo3dGeoportal,
+                )
+                .replace(
+                  /http:\/\/localhost(:\d{4})?\//,
+                  config.pathTo3dGeoportal,
+                );
+
+              data.set('url', urlToShorten);
+
+              const response = await fetch(config.pathToUrlShortenerApi, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: data.toString(),
+              });
+
+              if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erreur ${response.status}: ${errorText}`);
+              }
+
+              const dataResponse = await response.json();
+              const shortUrl = dataResponse.short_url;
+
               if (navigator.clipboard) {
-                await navigator.clipboard.writeText(url.toString());
+                await navigator.clipboard.writeText(shortUrl);
                 app.notifier.add({
                   title: 'createLink.title',
                   message: 'createLink.copied',
                   type: NotificationType.SUCCESS,
                 });
               } else {
-                createFallbackWindow(app, url.toString());
+                createFallbackWindow(app, shortUrl);
               }
             },
           },
@@ -97,6 +135,18 @@ export default function createLink(): VcsPlugin<never, never> {
       );
 
       return Promise.resolve();
+    },
+    getDefaultOptions(): PluginConfig {
+      return {
+        pathTo3dGeoportal: config.pathTo3dGeoportal,
+        pathToUrlShortenerApi: config.pathToUrlShortenerApi,
+      };
+    },
+    toJSON(): PluginConfig {
+      return {
+        pathTo3dGeoportal: config.pathTo3dGeoportal,
+        pathToUrlShortenerApi: config.pathToUrlShortenerApi,
+      };
     },
   };
 }

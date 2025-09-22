@@ -1,7 +1,7 @@
 {
-  "name": "@vcmap/create-link",
-  "version": "3.0.0",
-  "description": "Plugin to copy app state to URL.",
+  "name": "@geoportallux/3dviewer-plugin-create-link",
+  "version": "1.0.0-alpha",
+  "description": "Plugin to copy app state to URL and shorten the url.",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "type-check": "vue-tsc --noEmit",
     "ensure-types": "vcmplugin ensure-types"
   },
-  "author": "Ben Kuster <bkuster@vc.systems>",
+  "author": "Camptocamp",
   "license": "MIT",
   "keywords": [
     "vcmap",
