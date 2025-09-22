@@ -1,4 +1,4 @@
-# @geoportallux/3dviewer-plugin-create-link
+# @geoportallux/lux-3dviewer-plugin-create-link
 
 This plugin is a fork of `@vcmap/create-link`.
 
@@ -10,5 +10,27 @@ This version adds a call to a url shortener api before copying the url into the 
 
 ## Optional parameters
 
-- `pathTo3dGeoportal` The final path to the 3dviewer online, mainly used for local dev and github previews, it will replace the `localhost` url or the *Githubpages* url with `pathTo3dGeoportal`.
+- `pathTo3dGeoportal` The final path to the 3dviewer online, mainly used for local dev and github previews, it will replace the `localhost` url or the _Githubpages_ url with `pathTo3dGeoportal`.
 - `pathToUrlShortenerApi` The full path to the url shortener (eg. `https://myportal.io/short/create`)
+
+## Deploy plugin within map-ui
+
+- Add plugin dependency in desired version to `plugins/package.json`
+
+```
+"dependencies": {
+  ...
+  "@geoportallux/lux-3dviewer-plugin-create-link": "^1.0.0-alpha",
+  ...
+```
+
+- Add plugin with desired values to map-ui module configuration:
+
+```
+{
+    "name": "@geoportallux/lux-3dviewer-plugin-create-link",
+    "entry": "plugins/@geoportallux/lux-3dviewer-plugin-create-link/index.js",
+    "pathTo3dGeoportal": "...",
+    "pathToUrlShortenerApi": "..."
+},
+```

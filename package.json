@@ -1,5 +1,5 @@
 {
-  "name": "@geoportallux/3dviewer-plugin-create-link",
+  "name": "@geoportallux/lux-3dviewer-plugin-create-link",
   "version": "1.0.0-alpha",
   "description": "Plugin to copy app state to URL and shorten the url.",
   "type": "module",
