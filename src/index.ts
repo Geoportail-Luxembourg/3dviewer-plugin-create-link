@@ -9,6 +9,10 @@ import {
 import FallbackCreateLink from './fallbackCreateLink.vue';
 import { name, version, mapVersion } from '../package.json';
 
+type PluginConfig = {
+  pathToUrlShortenerApi: string;
+};
+
 const fallBackWindowId = 'create-link-fallback-window';
 function createFallbackWindow(app: VcsUiApp, link: string): void {
   app.windowManager.remove(fallBackWindowId);
@@ -29,7 +33,9 @@ function createFallbackWindow(app: VcsUiApp, link: string): void {
   );
 }
 
-export default function createLink(): VcsPlugin<never, never> {
+export default function createLink(
+  config: PluginConfig,
+): VcsPlugin<PluginConfig, never> {
   return {
     get name(): string {
       return name;
@@ -61,6 +67,26 @@ export default function createLink(): VcsPlugin<never, never> {
           copied: 'Application link copied to clipboard.',
         },
       },
+      fr: {
+        createLink: {
+          title: 'Copier le lien',
+          windowTitle: 'Lien',
+          createLink: 'Générer le lien',
+          copyToClipboard: 'Copier le lien dans le presse-papiers',
+          refreshTooltip: 'Rafraîchir le lien',
+          copied: 'Le lien a bien été copié dans le presse-papiers.',
+        },
+      },
+      lb: {
+        createLink: {
+          title: 'Link kopéieren',
+          windowTitle: 'Applicatiouns-Link',
+          createLink: 'Link erstellen',
+          copyToClipboard: "Applicatiouns-Link an d'Zëschenaplag kopéieren",
+          refreshTooltip: 'Applicatiouns-Link aktualiséieren',
+          copied: "Applicatiouns-Link gouf an d'Zëschenaplag kopéiert.",
+        },
+      },
     },
     initialize(app: VcsUiApp): Promise<void> {
       const actionName = navigator.clipboard
@@ -78,15 +104,35 @@ export default function createLink(): VcsPlugin<never, never> {
               const state = await app.getState(true);
               const url = new URL(window.location.href);
               setStateToUrl(state, url);
+
+              const data = new URLSearchParams();
+              data.set('url', url.toString());
+
+              const response = await fetch(config.pathToUrlShortenerApi, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: data.toString(),
+              });
+
+              if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erreur ${response.status}: ${errorText}`);
+              }
+
+              const dataResponse = await response.json();
+              const shortUrl = dataResponse.short_url;
+
               if (navigator.clipboard) {
-                await navigator.clipboard.writeText(url.toString());
+                await navigator.clipboard.writeText(shortUrl);
                 app.notifier.add({
                   title: 'createLink.title',
                   message: 'createLink.copied',
                   type: NotificationType.SUCCESS,
                 });
               } else {
-                createFallbackWindow(app, url.toString());
+                createFallbackWindow(app, shortUrl);
               }
             },
           },
@@ -97,6 +143,16 @@ export default function createLink(): VcsPlugin<never, never> {
       );
 
       return Promise.resolve();
+    },
+    getDefaultOptions(): PluginConfig {
+      return {
+        pathToUrlShortenerApi: config.pathToUrlShortenerApi,
+      };
+    },
+    toJSON(): PluginConfig {
+      return {
+        pathToUrlShortenerApi: config.pathToUrlShortenerApi,
+      };
     },
   };
 }

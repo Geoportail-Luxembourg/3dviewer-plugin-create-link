@@ -1,3 +1,4 @@
 {
-  "name": "create-link"
+  "name": "@geoportallux/lux-3dviewer-plugin-create-link",
+  "pathToUrlShortenerApi": "https://migration.geoportail.lu/short/create"
 }
