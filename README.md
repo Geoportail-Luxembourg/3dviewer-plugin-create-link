@@ -10,7 +10,6 @@ This version adds a call to a url shortener api before copying the url into the 
 
 ## Optional parameters
 
-- `pathTo3dGeoportal` The final path to the 3dviewer online, mainly used for local dev and github previews, it will replace the `localhost` url or the _Githubpages_ url with `pathTo3dGeoportal`.
 - `pathToUrlShortenerApi` The full path to the url shortener (eg. `https://myportal.io/short/create`)
 
 ## Deploy plugin within map-ui
@@ -30,7 +29,6 @@ This version adds a call to a url shortener api before copying the url into the 
 {
     "name": "@geoportallux/lux-3dviewer-plugin-create-link",
     "entry": "plugins/@geoportallux/lux-3dviewer-plugin-create-link/index.js",
-    "pathTo3dGeoportal": "...",
     "pathToUrlShortenerApi": "..."
 },
 ```

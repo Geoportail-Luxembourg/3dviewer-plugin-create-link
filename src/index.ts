@@ -10,7 +10,6 @@ import FallbackCreateLink from './fallbackCreateLink.vue';
 import { name, version, mapVersion } from '../package.json';
 
 type PluginConfig = {
-  pathTo3dGeoportal: string;
   pathToUrlShortenerApi: string;
 };
 
@@ -107,18 +106,7 @@ export default function createLink(
               setStateToUrl(state, url);
 
               const data = new URLSearchParams();
-              const urlToShorten = url
-                .toString()
-                .replace(
-                  /https:\/\/geoportail-luxembourg.github.io\/.+\/.+\//,
-                  config.pathTo3dGeoportal,
-                )
-                .replace(
-                  /http:\/\/localhost(:\d{4})?\//,
-                  config.pathTo3dGeoportal,
-                );
-
-              data.set('url', urlToShorten);
+              data.set('url', url.toString());
 
               const response = await fetch(config.pathToUrlShortenerApi, {
                 method: 'POST',
@@ -158,13 +146,11 @@ export default function createLink(
     },
     getDefaultOptions(): PluginConfig {
       return {
-        pathTo3dGeoportal: config.pathTo3dGeoportal,
         pathToUrlShortenerApi: config.pathToUrlShortenerApi,
       };
     },
     toJSON(): PluginConfig {
       return {
-        pathTo3dGeoportal: config.pathTo3dGeoportal,
         pathToUrlShortenerApi: config.pathToUrlShortenerApi,
       };
     },

@@ -1,5 +1,4 @@
 {
   "name": "@geoportallux/lux-3dviewer-plugin-create-link",
-  "pathTo3dGeoportal": "https://3d.geoportail.lu",
   "pathToUrlShortenerApi": "https://migration.geoportail.lu/short/create"
 }
