@@ -2,6 +2,10 @@
   "name": "@geoportallux/lux-3dviewer-plugin-create-link",
   "version": "1.0.0",
   "description": "Plugin to copy app state to URL and shorten the url.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geoportail-Luxembourg/3dviewer-plugin-create-link.git"
+  },
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
